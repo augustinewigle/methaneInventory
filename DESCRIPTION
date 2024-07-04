@@ -1,0 +1,22 @@
+Package: methaneInventory
+Title: Create Methane Inventories with Weighting Methods
+Version: 0.0.0.9000
+Authors@R: 
+    person("Augustine", "Wigle", email = "ex@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-0225-1949"))
+Description: What the package does (one paragraph).
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+LinkingTo: Rcpp
+Imports:
+    dtplyr,
+    dplyr,
+    tidyr,
+    flexsurv,
+    stringr,
+    Rcpp
+Depends: 
+    R (>= 3.5.0)
+LazyData: true
