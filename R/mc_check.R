@@ -7,7 +7,7 @@ mc_check <- function(inventory) {
 
   if(is.null(inventory$convergence_checking)) {
 
-    stop("No Monte Carlo used in this inventory. No need to check number of MC iterations.")
+    stop("No Monte Carlo used in this inventory. No need to check convergence.")
 
   }
 
@@ -25,7 +25,8 @@ mc_check <- function(inventory) {
   }
 
   # plots
-  par(mfrow = c(4,4), mar = c(4,4,2,1))
+  nstrata <- ncol(inventory$convergence_checking)
+  par(mfrow = c(4,ceiling(nstrata/4)), mar = c(4,4,2,1))
   for(strata in 1:ncol(inventory$convergence_checking)) {
 
     print(plot(mc_df[,1], mc_df[,strata+1], type = "l",
