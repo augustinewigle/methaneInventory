@@ -6,7 +6,7 @@
 #' @param n_sim the number of times we want to simulate y values. Must be specified if with_me = T
 #' @param truncate_pod value at which to truncate probabilities of detection for small probabilities. Default is 0.02
 #' @param bias_corr constant to multiply all Y values by to correct for bias. Only used if with_me = F. Set to 1 if no bias correction is necessary.
-#' @param day_pop_name name of the column in data_frame that contains the population size. Default is NA, in which case we treat the number of passes as the pop of interest.
+#' @param consider_stageII Logical; should stage II uncertainty be considered? If TRUE, a simple random sample with population size derived from column Di in data_frame is used. Otherwise, ignored.
 #' @return A list:
 #'    stratum_totals - point estimates of stratum totals, in kt/y
 #'    pop_total - point estimate of population total in kt/y
@@ -18,26 +18,34 @@
 #' @export
 calc_inventory <- function(data_frame,
                   est_type,
-                  with_me = T,
+                  with_me = TRUE,
                   n_sim = NA,
                   truncate_pod = 0.02,
                   bias_corr = 0.918,
-                  day_pop_name = NA) {
+                  consider_stageII = TRUE) {
 
   if(with_me & is.na(n_sim)) {
 
-    stop("`n_sim` must be speficied if `with_me` = T")
+    stop("`n_sim` must be specified if `with_me` = TRUE")
 
   }
 
-  if(is.na(day_pop_name)) {
+  data_frame <- group_by(data_frame, component_id) %>% mutate(num_days = length(unique(day)))
 
-    day_pop_name <- "num_days"
+  if(!consider_stageII) {
+
+    data_frame <- mutate(data_frame, Di=num_days)
+
+
+  } else {
+
+    if(is.null(data_frame$Di)) {
+
+      stop("data_frame must contain the column Di if consider_stageII = TRUE. Use prep_data with argument add_day_pop = TRUE and try again.")
+
+    }
 
   }
-
-  data_frame <- group_by(data_frame, component_id) %>% mutate(num_days = length(unique(day)),
-                                                              Di = !!as.symbol(day_pop_name))
 
   if(!(with_me)) {
 
