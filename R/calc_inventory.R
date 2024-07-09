@@ -39,11 +39,13 @@ calc_inventory <- function(data_frame,
 
   } else {
 
-    if(is.null(data_frame$Di)) {
+    if(is.null(data_frame$D)) {
 
-      stop("data_frame must contain the column Di if consider_stageII = TRUE. Use prep_data with argument add_day_pop = TRUE and try again.")
+      stop("data_frame must contain the column D if consider_stageII = TRUE. Use prep_data with argument add_day_pop = TRUE and try again.")
 
     }
+
+    data_frame <- mutate(data_frame, Di=D)
 
   }
 

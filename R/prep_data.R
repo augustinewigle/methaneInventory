@@ -12,7 +12,7 @@
 #' @param num_wells_name name of the column with the number of wells at the facility
 #' @param add_day_pop Logical; default is FALSE, and no new columns are added
 #' @param day_pop_value The number of days to use as the stage II population size when adding a column. Default is 365
-#' @return dataframe compatible with calc_inventory; adds column num_passes, and optionally, additional column Di if add_day_pop = TRUE
+#' @return dataframe compatible with calc_inventory; adds column num_passes, and optionally, additional column D if add_day_pop = TRUE
 #' @export
 prep_data <- function(raw_data,
                       component_name,
@@ -40,7 +40,7 @@ prep_data <- function(raw_data,
 
   if(add_day_pop) {
 
-    new_data$Di <- day_pop_value
+    new_data$D <- day_pop_value
 
   }
 
