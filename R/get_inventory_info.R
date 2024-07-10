@@ -1,6 +1,7 @@
 #' Take a calc_inventory object and produce CIs for the pop total, and desired individual strata, and variance breakdowns
 #' @param result the result of calc_inventory
 #' @param strata logical; T if CIs for strata are desired
+#' @param pop logical; T if CIs for population are desired
 #' @param strata_names vector of string names of strata to produce CIs for; required if strata = TRUE. Can set to "ALL" if CIs for all strata are desired
 #' @param conf_level confidence level
 #' @param var_decomp Logical; should each variance source be reported separately? Default is TRUE.
@@ -9,6 +10,7 @@
 #' @export
 get_inventory_info <- function(result,
                                strata = TRUE,
+                               pop = TRUE,
                                strata_names = "ALL",
                                var_decomp = TRUE,
                                conf_level=0.95) {
@@ -17,21 +19,33 @@ get_inventory_info <- function(result,
   stratum_summary <- result$stratum_summary
   alpha <- (1-conf_level)/2
 
-  if(strata) {
+  if(strata & strata_names[1] != "ALL") {
 
-    pop_summary <- rbind(pop_summary, stratum_summary)
-
-    if(strata_names[1] != "ALL") {
-
-      pop_summary <- pop_summary %>% subset(stratum %in% c("Population", strata_names))
-
-    }
-
-
+    stratum_summary <- stratum_summary %>% subset(stratum %in% strata_names)
 
   }
 
-  pop_info <- pivot_longer(pop_summary, cols = ends_with("var_kty"),
+  made_summary <- rbind(pop_summary, stratum_summary)
+
+  if(!pop) {
+
+    made_summary <- subset(made_summary, stratum != "Population")
+
+  }
+
+  if(!strata) {
+
+    made_summary <- subset(made_summary, stratum == "Population")
+
+  }
+
+  if(nrow(made_summary) == 0) {
+
+    stop("One or both of `strata` or `pop` must be TRUE.")
+
+  }
+
+  pop_info <- pivot_longer(made_summary, cols = ends_with("var_kty"),
                            names_pattern = "^(.*?)(?=var_kty)",
                            names_to = "vartype",
                            values_to = "var")

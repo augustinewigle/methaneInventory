@@ -7,6 +7,7 @@
 get_inventory_info(
   result,
   strata = TRUE,
+  pop = TRUE,
   strata_names = "ALL",
   var_decomp = TRUE,
   conf_level = 0.95
@@ -16,6 +17,8 @@ get_inventory_info(
 \item{result}{the result of calc_inventory}
 
 \item{strata}{logical; T if CIs for strata are desired}
+
+\item{pop}{logical; T if CIs for population are desired}
 
 \item{strata_names}{vector of string names of strata to produce CIs for; required if strata = TRUE. Can set to "ALL" if CIs for all strata are desired}
 
