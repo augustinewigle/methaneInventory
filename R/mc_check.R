@@ -1,9 +1,10 @@
 #' Make plots to assess the number of MC iterations
 #' @param inventory an inventory obtained by running calc_inventory which had measurement error
+#' @param ... additional arguments passed to par
 #' @importFrom stringr str_wrap
 #' @importFrom graphics par
 #' @export
-mc_check <- function(inventory) {
+mc_check <- function(inventory, ...) {
 
   if(is.null(inventory$convergence_checking)) {
 
@@ -26,14 +27,16 @@ mc_check <- function(inventory) {
 
   # plots
   nstrata <- ncol(inventory$convergence_checking)
-  par(mfrow = c(4,ceiling(nstrata/4)), mar = c(4,4,2,1))
+  par(mfrow = c(4, ceiling(nstrata/4)), mar = c(4, 6, 2, 1), ...)
+
   for(strata in 1:ncol(inventory$convergence_checking)) {
 
-    print(plot(mc_df[,1], mc_df[,strata+1], type = "l",
-               main = str_wrap(names(inventory$convergence_checking)[strata],
-                               width = 10),
-               xlab = "MC iterations",
-               ylab = "mean(stratum var estimate)"))
+    p <- plot(mc_df[,1], mc_df[,strata+1], type = "l", col = "navyblue",
+              main = str_trunc(names(inventory$convergence_checking)[strata],
+                              width = 15),
+              xlab = "MC iteration",
+              ylab = expression(tilde(V)^{3~stage}))
+    invisible(p)
 
   }
 
