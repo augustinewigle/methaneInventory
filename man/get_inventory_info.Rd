@@ -4,14 +4,22 @@
 \alias{get_inventory_info}
 \title{Take a calc_inventory object and produce CIs for the pop total, and desired individual strata, and variance breakdowns}
 \usage{
-get_inventory_info(result, strata = T, strata_names = "ALL", conf_level = 0.95)
+get_inventory_info(
+  result,
+  strata = TRUE,
+  strata_names = "ALL",
+  var_decomp = TRUE,
+  conf_level = 0.95
+)
 }
 \arguments{
 \item{result}{the result of calc_inventory}
 
 \item{strata}{logical; T if CIs for strata are desired}
 
-\item{strata_names}{vector of string names of strata to produce CIs for; required if strata = T. Can set to "ALL" if CIs for all strata are desired}
+\item{strata_names}{vector of string names of strata to produce CIs for; required if strata = TRUE. Can set to "ALL" if CIs for all strata are desired}
+
+\item{var_decomp}{Logical; should each variance source be reported separately? Default is TRUE.}
 
 \item{conf_level}{confidence level}
 }

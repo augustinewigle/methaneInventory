@@ -1,7 +1,7 @@
 #' Make plots to assess the number of MC iterations
 #' @param inventory an inventory obtained by running calc_inventory which had measurement error
 #' @param ... additional arguments passed to par
-#' @importFrom stringr str_wrap
+#' @importFrom stringr str_trunc
 #' @importFrom graphics par
 #' @export
 mc_check <- function(inventory, ...) {

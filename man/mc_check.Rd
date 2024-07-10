@@ -4,10 +4,12 @@
 \alias{mc_check}
 \title{Make plots to assess the number of MC iterations}
 \usage{
-mc_check(inventory)
+mc_check(inventory, ...)
 }
 \arguments{
 \item{inventory}{an inventory obtained by running calc_inventory which had measurement error}
+
+\item{...}{additional arguments passed to par}
 }
 \description{
 Make plots to assess the number of MC iterations

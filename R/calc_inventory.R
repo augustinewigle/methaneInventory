@@ -1,11 +1,10 @@
-#' Runs MC simulation to account for measurement bias and uncertainty
-#' runs a monte carlo simulation to incorporate measurement bias and uncertainty into the stratum and pop estimates
+#' Estimate methane emissions using a multi-stage approach
 #' @param data_frame a data_frame that contains all information on the relevant dataset
 #' @param est_type string indicating which estimator should be used to aggregate pass data, either "ipw" or "hajek"
 #' @param with_me logical indicating if measurement error should be incorporated or not
 #' @param n_sim the number of times we want to simulate y values. Must be specified if with_me = T
 #' @param truncate_pod value at which to truncate probabilities of detection for small probabilities. Default is 0.02
-#' @param bias_corr constant to multiply all Y values by to correct for bias. Only used if with_me = F. Set to 1 if no bias correction is necessary.
+#' @param bias_corr constant to multiply all Y values by to correct for bias. Set to 1 if no bias correction is necessary. Ignored if with_me = TRUE.
 #' @param consider_stageII Logical; should stage II uncertainty be considered? If TRUE, a simple random sample with population size derived from column Di in data_frame is used. Otherwise, ignored.
 #' @return A list:
 #'    stratum_totals - point estimates of stratum totals, in kt/y
@@ -18,7 +17,7 @@
 #' @export
 calc_inventory <- function(data_frame,
                   est_type,
-                  with_me = TRUE,
+                  with_me = FALSE,
                   n_sim = NA,
                   truncate_pod = 0.02,
                   bias_corr = 0.918,

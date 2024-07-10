@@ -2,7 +2,7 @@
 % Please edit documentation in R/prep_data.R
 \name{prep_data}
 \alias{prep_data}
-\title{name data columns the right way}
+\title{Prepare raw data for analysis}
 \usage{
 prep_data(
   raw_data,
@@ -15,11 +15,13 @@ prep_data(
   Y_name,
   u_name,
   h_name,
-  num_wells_name
+  num_wells_name,
+  add_day_pop = F,
+  day_pop_value = 365
 )
 }
 \arguments{
-\item{raw_data}{data.frame containing the data}
+\item{raw_data}{data.frame containing the raw data (for example, use the dat object included in this package)}
 
 \item{component_name}{name of the column with component identifiers}
 
@@ -40,10 +42,14 @@ prep_data(
 \item{h_name}{name of the column with height measurements, in m}
 
 \item{num_wells_name}{name of the column with the number of wells at the facility}
+
+\item{add_day_pop}{Logical; default is FALSE, and no new columns are added}
+
+\item{day_pop_value}{The number of days to use as the stage II population size when adding a column. Default is 365}
 }
 \value{
-dataframe with properly named columns and the additional column num_passes
+dataframe compatible with calc_inventory; adds column num_passes, and optionally, additional column D if add_day_pop = TRUE
 }
 \description{
-name data columns the right way
+Prepare raw data for analysis
 }

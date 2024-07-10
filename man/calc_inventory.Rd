@@ -2,17 +2,16 @@
 % Please edit documentation in R/calc_inventory.R
 \name{calc_inventory}
 \alias{calc_inventory}
-\title{Runs MC simulation to account for measurement bias and uncertainty
-runs a monte carlo simulation to incorporate measurement bias and uncertainty into the stratum and pop estimates}
+\title{Estimate methane emissions using a multi-stage approach}
 \usage{
 calc_inventory(
   data_frame,
   est_type,
-  with_me = T,
+  with_me = FALSE,
   n_sim = NA,
   truncate_pod = 0.02,
   bias_corr = 0.918,
-  day_pop_name = NA
+  consider_stageII = TRUE
 )
 }
 \arguments{
@@ -26,9 +25,9 @@ calc_inventory(
 
 \item{truncate_pod}{value at which to truncate probabilities of detection for small probabilities. Default is 0.02}
 
-\item{bias_corr}{constant to multiply all Y values by to correct for bias. Only used if with_me = F. Set to 1 if no bias correction is necessary.}
+\item{bias_corr}{constant to multiply all Y values by to correct for bias. Set to 1 if no bias correction is necessary. Ignored if with_me = TRUE.}
 
-\item{day_pop_name}{name of the column in data_frame that contains the population size. Default is NA, in which case we treat the number of passes as the pop of interest.}
+\item{consider_stageII}{Logical; should stage II uncertainty be considered? If TRUE, a simple random sample with population size derived from column Di in data_frame is used. Otherwise, ignored.}
 }
 \value{
 A list:
@@ -38,6 +37,5 @@ stratum_var a data.frame with columns var_me (variance due to measurement error)
 pop_var same as stratum_var but for the population total
 }
 \description{
-Runs MC simulation to account for measurement bias and uncertainty
-runs a monte carlo simulation to incorporate measurement bias and uncertainty into the stratum and pop estimates
+Estimate methane emissions using a multi-stage approach
 }
