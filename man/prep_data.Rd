@@ -13,6 +13,7 @@ prep_data(
   nh_name,
   Nh_name,
   Y_name,
+  Y_units = "kg/h",
   u_name,
   h_name,
   num_wells_name,
@@ -35,7 +36,9 @@ prep_data(
 
 \item{Nh_name}{name of the column with stratum population sizes}
 
-\item{Y_name}{name of the column with emission rate measurements, in kg/h}
+\item{Y_name}{name of the column with emission rate measurements}
+
+\item{Y_units}{a string of the units of the emission rate measurements. Default is kg/h. Other options are m^3/d or kt/y, which will be converted to kg/h.}
 
 \item{u_name}{name of the column with wind speed measurements, in m/s}
 

@@ -6,7 +6,8 @@
 #' @param day_name name of the column identifying the days
 #' @param nh_name name of the column with stratum sample sizes
 #' @param Nh_name name of the column with stratum population sizes
-#' @param Y_name name of the column with emission rate measurements, in kg/h
+#' @param Y_name name of the column with emission rate measurements
+#' @param Y_units a string of the units of the emission rate measurements. Default is kg/h. Other options are m^3/d or kt/y, which will be converted to kg/h.
 #' @param u_name name of the column with wind speed measurements, in m/s
 #' @param h_name name of the column with height measurements, in m
 #' @param num_wells_name name of the column with the number of wells at the facility
@@ -21,10 +22,14 @@ prep_data <- function(raw_data,
                       day_name,
                       nh_name,
                       Nh_name,
-                      Y_name, u_name, h_name,
+                      Y_name,
+                      Y_units = "kg/h",
+                      u_name, h_name,
                       num_wells_name,
                       add_day_pop = F,
                       day_pop_value = 365) {
+
+
 
   new_data <- raw_data %>% transmute(component_id = !!as.symbol(component_name),
                                      facility_id = !!as.symbol(facility_name),
@@ -32,7 +37,7 @@ prep_data <- function(raw_data,
                                      day = !!as.symbol(day_name),
                                      nh = !!as.symbol(nh_name),
                                      Nh = !!as.symbol(Nh_name),
-                                     Y = !!as.symbol(Y_name),
+                                     Y = convert_units(emission_rates = !!as.symbol(Y_name), units = Y_units),
                                      u = !!as.symbol(u_name),
                                      h = !!as.symbol(h_name),
                                      num_wells = !!as.symbol(num_wells_name)) %>%
