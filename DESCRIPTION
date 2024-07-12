@@ -1,10 +1,12 @@
 Package: methaneInventory
-Title: Create Methane Inventories with Weighting Methods
+Title: Create Methane Inventories Using a Multi-Stage Framework
 Version: 0.0.0.9000
 Authors@R: 
-    person("Augustine", "Wigle", email = "ex@gmail.com", role = c("aut", "cre"),
+    person("Augustine", "Wigle", email = "augustine.wigle@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-0225-1949"))
-Description: What the package does (one paragraph).
+Description: Creates measurement-based methane inventories from raw data using the methods in Wigle and Beliveau at the arXiv URL.
+    Includes functions to format measurement data, estimate the inventory, check convergence, and process results.
+URL: https://github.com/augustinewigle/methaneInventory
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
