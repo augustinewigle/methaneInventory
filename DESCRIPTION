@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Augustine", "Wigle", email = "augustine.wigle@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-0225-1949"))
-Description: Creates measurement-based methane inventories from raw data using the methods in Wigle and Beliveau at the arXiv URL.
+Description: Creates measurement-based methane inventories from raw data using the methods in Wigle and Beliveau 2024 (available at https://arxiv.org/abs/2407.08827).
     Includes functions to format measurement data, estimate the inventory, check convergence, and process results.
 URL: https://github.com/augustinewigle/methaneInventory
 License: GPL (>= 3)
