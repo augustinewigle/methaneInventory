@@ -6,6 +6,7 @@
 #' @param truncate_pod value at which to truncate probabilities of detection for small probabilities. Default is 0.02
 #' @param bias_corr constant to multiply all Y values by to correct for bias. Set to 1 if no bias correction is necessary. Ignored if with_me = TRUE.
 #' @param consider_stageII Logical; should stage II uncertainty be considered? If TRUE, a simple random sample with population size derived from column Di in data_frame is used. Otherwise, ignored.
+#' @param progress logical; should progress messages be printed if measurement error considered?
 #' @return A list:
 #'    stratum_totals - point estimates of stratum totals, in kt/y
 #'    pop_total - point estimate of population total in kt/y
@@ -21,7 +22,8 @@ calc_inventory <- function(data_frame,
                   n_sim = NA,
                   truncate_pod = 0.02,
                   bias_corr = 0.918,
-                  consider_stageII = TRUE) {
+                  consider_stageII = TRUE,
+                  progress = T) {
 
   if(with_me & is.na(n_sim)) {
 
@@ -76,7 +78,8 @@ calc_inventory <- function(data_frame,
     summaries <- run_mc_me(data_frame = data_frame,
                            est_type = est_type,
                            n_sim = n_sim,
-                           truncate_pod = truncate_pod)
+                           truncate_pod = truncate_pod,
+                           progress = progress)
 
 
     return(summaries)

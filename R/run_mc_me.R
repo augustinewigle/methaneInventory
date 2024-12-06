@@ -4,13 +4,14 @@
 #' @param n_sim the number of times we want to simulate y values. Must be specified if with_me = T
 #' @param truncate_pod value at which to truncate probabilities of detection for small probabilities. Default is 0.02
 #' @param stage2_design Number of days in the population at stage 2. 365 for a year, or set to 0 to ignore variance contributino from stage 2.
+#' @param progress should progress be printed?
 #' @importFrom stats var
 #' @export
 run_mc_me <- function(data_frame,
                       est_type,
                       n_sim,
                       truncate_pod = 0.02,
-                      stage2_design) {
+                      stage2_design, progress = T) {
 
   # Set up things to save data
   strata_total_ests <- as.data.frame(matrix(nrow = n_sim, ncol = length(unique(data_frame$stratum))))
@@ -19,7 +20,7 @@ run_mc_me <- function(data_frame,
   strata_total_stage2var_ests <- strata_total_ests
   strata_total_stage3var_ests <- strata_total_ests
 
-  inc <- floor(n_sim*0.2)
+  inc <- max(1, floor(n_sim*0.2))
 
   for(b in 1:n_sim) {
 
@@ -44,14 +45,14 @@ run_mc_me <- function(data_frame,
     strata_total_stage2var_ests[b,] <- stratum_totals$stage2var_kty
     strata_total_stage3var_ests[b,] <- stratum_totals$stage3var_kty
 
-    if(b%%inc == 0) {
+    if(b%%inc == 0 & progress) {
 
       print(paste0(b/n_sim*100, "% complete"))
 
     }
   }
 
-  print("Post-processing...")
+  if(progress) {print("Post-processing...")}
 
   names(strata_total_ests) <- names(strata_total_var_ests) <- names(strata_total_stage1var_ests) <- names(strata_total_stage2var_ests) <- stratum_totals$stratum
 
@@ -88,6 +89,8 @@ run_mc_me <- function(data_frame,
 
   stratum_summary$totvar_kty <- stratum_summary$measurementvar_kty + stratum_summary$designvar_kty
   pop_summary$totvar_kty <- pop_summary$measurementvar_kty + pop_summary$designvar_kty
+
+  if(progress) { print("Complete!") }
 
   return(list(stratum_summary = stratum_summary,
               pop_summary = pop_summary,
