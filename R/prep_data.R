@@ -37,11 +37,13 @@ prep_data <- function(raw_data,
                                      day = !!as.symbol(day_name),
                                      nh = !!as.symbol(nh_name),
                                      Nh = !!as.symbol(Nh_name),
-                                     Y = convert_units(emission_rates = !!as.symbol(Y_name), units = Y_units),
+                                     Y = !!as.symbol(Y_name),
                                      u = !!as.symbol(u_name),
                                      h = !!as.symbol(h_name),
                                      num_wells = !!as.symbol(num_wells_name)) %>%
     group_by(day,component_id) %>% mutate(num_passes = n())
+
+  new_data$Y <- convert_units(emission_rates = new_data$Y, units = Y_units)
 
   if(add_day_pop) {
 
