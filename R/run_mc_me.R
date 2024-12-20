@@ -22,17 +22,42 @@ run_mc_me <- function(data_frame,
 
   inc <- max(1, floor(n_sim*0.2))
 
+  # Draw all the new y's that you are going to need ahead of time
+
+  yvec <- rep(data_frame$Y, n_sim)
+
+  new_y <- matrix(draw_y(yvec), byrow = F, ncol = n_sim)
+
+  # new[1,]
+
   for(b in 1:n_sim) {
 
     # draw a new y vector (for all the passes where methane was detected)
-    # Calculate p and phi for new Y's
-    new_ydata <- mutate(data_frame, detected = Y > 0) %>%
-                        mutate(Ytrue = draw_y(Y),
-                               pod = pod_func(Ytrue = Ytrue, u = u, h = h, truncate = truncate_pod)) %>%
-      group_by(component_id, day) %>% mutate(phi = estimate_phi(num_passes,
-                                                                p = pod,
-                                                                truncate = 0),
-                                             r = sum(detected)>0)
+    # Calculate p and phi for new Y's if est_type == "hajek", just p if est_type == "ipw"
+    if(est_type == "hajek") {
+
+      data_frame$Ytrue <- new_y[,b]
+      new_ydata <- mutate(data_frame, detected = Y > 0) %>%
+        mutate(pod = pod_func(Ytrue = Ytrue, u = u, h = h, truncate = truncate_pod)) %>%
+        group_by(component_id, day) %>% mutate(phi = estimate_phi(num_passes,
+                                                                  p = pod,
+                                                                  truncate = 0),
+                                               r = sum(detected)>0)
+
+    } else if(est_type == "ipw") {
+
+      data_frame$Ytrue <- new_y[,b]
+      new_ydata <- mutate(data_frame, detected = Y > 0) %>%
+        mutate(pod = pod_func(Ytrue = Ytrue, u = u, h = h, truncate = truncate_pod)) %>%
+        group_by(component_id, day) %>% mutate(phi = -1000,
+                                               r = sum(detected)>0)
+
+    } else {
+
+      stop(paste0("est_type is ", est_type, ", should be one of ipw or hajek"))
+
+    }
+
 
 
     stratum_totals <- do_one_inventory(data = new_ydata,
