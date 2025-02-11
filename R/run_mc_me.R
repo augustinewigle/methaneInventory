@@ -1,5 +1,7 @@
 #' Run Monte Carlo Simulation
 #' @param data_frame a data_frame that contains all information on the relevant dataset
+#' @param use_true_pod T/F
+#' @param true_pod_vec vector of true PODs (optional)
 #' @param est_type string indicating which estimator should be used to aggregate pass data, either "ipw" or "hajek"
 #' @param n_sim the number of times we want to simulate y values. Must be specified if with_me = T
 #' @param truncate_pod value at which to truncate probabilities of detection for small probabilities. Default is 0.02
@@ -8,6 +10,8 @@
 #' @importFrom stats var
 #' @export
 run_mc_me <- function(data_frame,
+                      use_true_pod,
+                      true_pod_vec = NULL,
                       est_type,
                       n_sim,
                       truncate_pod = 0.02,
@@ -28,33 +32,69 @@ run_mc_me <- function(data_frame,
 
   new_y <- matrix(draw_y(yvec), byrow = F, ncol = n_sim)
 
-  # new[1,]
+  data_frame$Ymean <- apply(new_y, 1, mean)
+
+  data_frame$pod <- true_pod_vec # if use_true_pod = F, pod will get overwritten at each mc iteration
 
   for(b in 1:n_sim) {
 
-    # draw a new y vector (for all the passes where methane was detected)
-    # Calculate p and phi for new Y's if est_type == "hajek", just p if est_type == "ipw"
-    if(est_type == "hajek") {
+    data_frame$Ytrue <- new_y[,b]
 
-      data_frame$Ytrue <- new_y[,b]
+    if(use_true_pod) {
+
       new_ydata <- mutate(data_frame, detected = Y > 0) %>%
-        mutate(pod = pod_func(Ytrue = Ytrue, u = u, h = h, truncate = truncate_pod)) %>%
-        group_by(component_id, day) %>% mutate(phi = estimate_phi(num_passes,
-                                                                  p = pod,
-                                                                  truncate = 0),
-                                               r = sum(detected)>0)
+       group_by(component_id, day) %>%
+        mutate(r = sum(detected)>0,
+               phi = -1000)
 
-    } else if(est_type == "ipw") {
+      if(est_type == "hajek") {
 
-      data_frame$Ytrue <- new_y[,b]
-      new_ydata <- mutate(data_frame, detected = Y > 0) %>%
-        mutate(pod = pod_func(Ytrue = Ytrue, u = u, h = h, truncate = truncate_pod)) %>%
-        group_by(component_id, day) %>% mutate(phi = -1000,
-                                               r = sum(detected)>0)
+        new_ydata <- new_ydata %>% mutate(phi = estimate_phi(num_passes,
+                                                             p = pod,
+                                                             truncate = 0))
+
+      }
+
 
     } else {
 
-      stop(paste0("est_type is ", est_type, ", should be one of ipw or hajek"))
+      new_ydata <- mutate(data_frame, detected = Y > 0) %>%
+        mutate(pod = pod_func(Ytrue = Ymean, u = u, h = h, truncate = truncate_pod)) %>%
+        group_by(component_id, day) %>%
+        mutate(r = sum(detected)>0,
+               phi = -1000)
+
+      if(est_type == "hajek") {
+
+        new_ydata <- new_ydata %>% mutate(phi = estimate_phi(num_passes,
+                                                             p = pod,
+                                                             truncate = 0))
+
+      }
+
+      # # draw a new y vector (for all the passes where methane was detected)
+      # # Calculate p and phi for new Y's if est_type == "hajek", just p if est_type == "ipw"
+      # if(est_type == "hajek") {
+      #
+      #   new_ydata <- mutate(data_frame, detected = Y > 0) %>%
+      #     mutate(pod = pod_func(Ytrue = Ymean, u = u, h = h, truncate = truncate_pod)) %>%
+      #     group_by(component_id, day) %>% mutate(phi = estimate_phi(num_passes,
+      #                                                               p = pod,
+      #                                                               truncate = 0),
+      #                                            r = sum(detected)>0)
+      #
+      # } else if(est_type == "ipw") {
+      #
+      #   new_ydata <- mutate(data_frame, detected = Y > 0) %>%
+      #     mutate(pod = pod_func(Ytrue = Ymean, u = u, h = h, truncate = truncate_pod)) %>%
+      #     group_by(component_id, day) %>% mutate(phi = -1000,
+      #                                            r = sum(detected)>0)
+      #
+      # } else {
+      #
+      #   stop(paste0("est_type is ", est_type, ", should be one of ipw or hajek"))
+      #
+      # }
 
     }
 

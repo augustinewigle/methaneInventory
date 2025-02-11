@@ -7,17 +7,24 @@
 calc_inventory(
   data_frame,
   est_type,
+  use_true_pod,
+  true_pod_vec = NULL,
   with_me = FALSE,
   n_sim = NA,
   truncate_pod = 0.02,
   bias_corr = 0.918,
-  consider_stageII = TRUE
+  consider_stageII = TRUE,
+  progress = T
 )
 }
 \arguments{
 \item{data_frame}{a data_frame that contains all information on the relevant dataset}
 
 \item{est_type}{string indicating which estimator should be used to aggregate pass data, either "ipw" or "hajek"}
+
+\item{use_true_pod}{T/F; should true pod be used in mcme?}
+
+\item{true_pod_vec}{vector of true PODs (optional, only needed if use_true_pod = T)}
 
 \item{with_me}{logical indicating if measurement error should be incorporated or not}
 
@@ -28,6 +35,8 @@ calc_inventory(
 \item{bias_corr}{constant to multiply all Y values by to correct for bias. Set to 1 if no bias correction is necessary. Ignored if with_me = TRUE.}
 
 \item{consider_stageII}{Logical; should stage II uncertainty be considered? If TRUE, a simple random sample with population size derived from column Di in data_frame is used. Otherwise, ignored.}
+
+\item{progress}{logical; should progress messages be printed if measurement error considered?}
 }
 \value{
 A list:

@@ -4,10 +4,23 @@
 \alias{run_mc_me}
 \title{Run Monte Carlo Simulation}
 \usage{
-run_mc_me(data_frame, est_type, n_sim, truncate_pod = 0.02, stage2_design)
+run_mc_me(
+  data_frame,
+  use_true_pod,
+  true_pod_vec = NULL,
+  est_type,
+  n_sim,
+  truncate_pod = 0.02,
+  stage2_design,
+  progress = T
+)
 }
 \arguments{
 \item{data_frame}{a data_frame that contains all information on the relevant dataset}
+
+\item{use_true_pod}{T/F}
+
+\item{true_pod_vec}{vector of true PODs (optional)}
 
 \item{est_type}{string indicating which estimator should be used to aggregate pass data, either "ipw" or "hajek"}
 
@@ -16,6 +29,8 @@ run_mc_me(data_frame, est_type, n_sim, truncate_pod = 0.02, stage2_design)
 \item{truncate_pod}{value at which to truncate probabilities of detection for small probabilities. Default is 0.02}
 
 \item{stage2_design}{Number of days in the population at stage 2. 365 for a year, or set to 0 to ignore variance contributino from stage 2.}
+
+\item{progress}{should progress be printed?}
 }
 \description{
 Run Monte Carlo Simulation
