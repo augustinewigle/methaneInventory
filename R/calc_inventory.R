@@ -1,7 +1,5 @@
 #' Estimate methane emissions using a multi-stage approach
-#' @param data_frame a data_frame that contains all information on the relevant dataset
-#' @param use_true_pod T/F; should true pod be used in mcme?
-#' @param true_pod_vec vector of true PODs (optional, only needed if use_true_pod = T)
+#' @param data_frame a data_frame that contains all information on the relevant dataset, prepared using prep_data
 #' @param est_type string indicating which estimator should be used to aggregate pass data, either "ipw" or "hajek"
 #' @param with_me logical indicating if measurement error should be incorporated or not
 #' @param n_sim the number of times we want to simulate y values. Must be specified if with_me = T
@@ -20,8 +18,8 @@
 #' @export
 calc_inventory <- function(data_frame,
                   est_type,
-                  use_true_pod,
-                  true_pod_vec = NULL,
+                  # use_true_pod,
+                  # true_pod_vec = NULL,
                   with_me = FALSE,
                   n_sim = NA,
                   truncate_pod = 0.02,
@@ -80,8 +78,8 @@ calc_inventory <- function(data_frame,
 
 
     summaries <- run_mc_me(data_frame = data_frame,
-                           use_true_pod = use_true_pod,
-                           true_pod_vec = true_pod_vec,
+                           # use_true_pod = use_true_pod,
+                           # true_pod_vec = true_pod_vec,
                            est_type = est_type,
                            n_sim = n_sim,
                            truncate_pod = truncate_pod,

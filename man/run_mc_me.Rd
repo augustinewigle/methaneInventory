@@ -6,8 +6,6 @@
 \usage{
 run_mc_me(
   data_frame,
-  use_true_pod,
-  true_pod_vec = NULL,
   est_type,
   n_sim,
   truncate_pod = 0.02,
@@ -17,10 +15,6 @@ run_mc_me(
 }
 \arguments{
 \item{data_frame}{a data_frame that contains all information on the relevant dataset}
-
-\item{use_true_pod}{T/F}
-
-\item{true_pod_vec}{vector of true PODs (optional)}
 
 \item{est_type}{string indicating which estimator should be used to aggregate pass data, either "ipw" or "hajek"}
 
